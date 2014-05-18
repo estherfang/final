@@ -2,7 +2,6 @@ Buyer:
     - name: string
     - phone: integer
     - password: string
-    - blacklist: boolean
 
 Seller:
     - name: string
@@ -39,7 +38,7 @@ Task:
 
 # Assume that buyers pay sellers in cash upon completion of task.
 
-Rating:
+Seller_Rating:
     - buyer_id: integer
     - seller_id: integer
     - task_id: integer
@@ -47,4 +46,14 @@ Rating:
     - comment: text
 
 # As a buyer, I want to rate sellers after completion of the task so that other
-# users can see if the seller did a good job fulfilling the task.
+# buyers can see if the seller did a good job fulfilling the task.
+
+Buyer_Rating:
+    - buyer_id: integer
+    - seller_id: integer
+    - task_id: integer
+    - rating: integer
+    - comment: text
+
+# As a seller, I want to rate buyers after completion of the task so that other
+# sellers can see if the buyer paid me on time.
