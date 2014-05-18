@@ -1,12 +1,50 @@
-# Example table for a typical Book model.
-#
-# Book:
-#   - title: string
-#   - price: integer
-#   - author: string
-#   - summary: text
-#   - hardcover: boolean
-#
-# Follow the syntax exactly (colons and spacing are important).
-# Column type choices are: string, text, integer, and boolean.
-# You can have as many models as you want in this file.
+Buyer:
+    - name: string
+    - phone: integer
+    - password: string
+    - blacklist: boolean
+
+Seller:
+    - name: string
+    - phone: integer
+    - password: string
+    - paypal_email: string
+
+# Assume that users will only either be sellers or buyers, not both.
+
+Task:
+    - buyer_id: integer
+    - seller_id: integer
+    - price_in_cents: integer
+    - description: text
+    - address: text
+    - latitude: float
+    - longitude: float
+    - start_date: date
+    - end_date: date
+    - start_time: time
+    - end_time: time
+    - task_completion: boolean
+
+# As a buyer, I want to post a task and a price that I will pay someone for doing it.
+# e.g. Pick up my laundry on Thursday 5/15 between 9am and 5pm from Location A
+# and drop it off at location B.
+
+# As a seller, I want to search available tasks by location and accept tasks that I
+# am willing to do for the given price.
+
+# If the task has not been accepted by a seller, then "seller_id" will be blank.
+# "address" will be converted into coordinates for displaying on a map and
+# searching by sellers.
+
+# Assume that buyers pay sellers in cash upon completion of task.
+
+Rating:
+    - buyer_id: integer
+    - seller_id: integer
+    - task_id: integer
+    - rating: integer
+    - comment: text
+
+# As a buyer, I want to rate sellers after completion of the task so that other
+# users can see if the seller did a good job fulfilling the task.
