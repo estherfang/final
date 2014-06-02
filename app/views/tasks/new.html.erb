@@ -1,0 +1,34 @@
+<h1>Create New Task</h1>
+
+<%= form_tag "/tasks", "method" => "post" %>
+
+<!-- NEED TO ADD ID OF BUYER POSTING TASK -->
+
+  <p>
+    <%= label_tag "description", "Description of task" %>
+    <%= text_field_tag "description" %>
+  </p>
+
+  <p>
+    <%= label_tag "address", "Location of task" %>
+    <%= text_field_tag "address" %>
+  </p>
+
+  <p>
+    <%= label_tag "start", "Start date & time (YYYY-MM-DD HH:MM)" %>
+    <%= text_field_tag "start" %>
+  </p>
+
+  <p>
+    <%= label_tag "end", "End date & time (YYYY-MM-DD HH:MM)" %>
+    <%= text_field_tag "end" %>
+  </p>
+
+  <p>
+    <%= label_tag "price_in_cents", "Price in cents (eg. type 1000 for $10)" %>
+    <%= text_field_tag "price_in_cents" %>
+  </p>
+
+  <%= submit_tag %> or <%= link_to "Cancel", "/tasks" %>
+
+</form>

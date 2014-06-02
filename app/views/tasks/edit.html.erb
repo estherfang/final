@@ -1,0 +1,51 @@
+<% task_id = params["id"] %>
+<% task = Task.read(task_id) %>
+
+<h1><%= task["name"] %></h1>
+
+<!-- NEED TO DISTINGUISH WHO IS VIEWING PAGE -->
+
+<em>Only seen by Sellers who haven't signed up for the task if the task is available [work in progress]</em><br>
+<h3><%= link_to "Placeholder to sign up for task", "/tasks/", "class" => 'btn btn-lg btn-primary' %></h3>
+
+<br><br>
+
+<em>Only seen by Sellers who have signed up for the task [work in progress]</em><br>
+<h3><%= link_to "Placeholder to mark task complete", "/tasks/", "class" => 'btn btn-lg btn-primary' %></h3>
+
+<br><br>
+
+<em>Only seen by Buyers who posted the task [functioning]</em>
+
+<%= form_tag "/tasks/#{task["id"]}", "method" => "patch" %>
+
+  <p>
+    <%= label_tag "description", "Description of task" %>
+    <%= text_field_tag "description", task["description"] %>
+  </p>
+
+  <p>
+    <%= label_tag "address", "Location of task" %>
+    <%= text_field_tag "address", task["address"] %>
+  </p>
+
+  <p>
+    <%= label_tag "start", "Start date & time (YYYY-MM-DD HH:MM)" %>
+    <%= text_field_tag "start", task["start"] %>
+  </p>
+
+  <p>
+    <%= label_tag "end", "End date & time (YYYY-MM-DD HH:MM)" %>
+    <%= text_field_tag "end", task["end"] %>
+  </p>
+
+  <p>
+    <%= label_tag "price_in_cents", "Price in cents (eg. type 1000 for $10)" %>
+    <%= text_field_tag "price_in_cents", task["price_in_cents"] %>
+  </p>
+
+  <%= submit_tag %> or <%= link_to "Cancel", "/tasks" %>
+
+</form>
+
+

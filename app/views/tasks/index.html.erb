@@ -1,0 +1,63 @@
+<head>
+<style>
+table
+  {
+    border-collapse:collapse;
+    color:#686868
+  }
+  table, td, th
+  {
+    border:1px solid #C0C0C0;
+    padding:10px;
+  }
+  th
+  {
+    border-bottom: 3px solid #C0C0C0;
+    text-align:left;
+  }
+</style>
+</head>
+
+<div class"row">
+  <div class="col-md-12" align>
+    <%= link_to "New Task", "/tasks/new", "class" => 'btn btn-lg btn-primary' %>
+  </div>
+</div>
+
+<div class"row">
+  <div class="col-md-12">
+    <h3>Posted Tasks</h3><br>
+  </div>
+</div>
+
+<table>
+  <tr>
+    <th>Description</th>
+    <th>Location</th>
+    <th>Start Date/Time</th>
+    <th>End Date/Time</th>
+    <th>Compensation</th>
+    <th>Task Available?</th>
+  </tr>
+
+  <% Task.read.order("start asc").each do |task| %>
+    <tr>
+      <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+      <td><%= task["address"] %></td>
+      <td><%= task["start"] %></td>
+      <td><%= task["end"] %></td>
+      <td>
+
+        <% price = task["price_in_cents"]/100 %>
+        $<%= number_with_precision(price, precision: 2) %>
+      </td>
+      <td>
+        <% if task["seller_id"].nil? %>
+          <%= link_to "Available", "/tasks/#{task["id"]}" %>
+          <% else %>
+            No
+        <% end %>
+      </td>
+    <tr>
+  <% end %>
+</table>

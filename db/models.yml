@@ -2,12 +2,13 @@ Buyer:
     - name: string
     - phone: integer
     - password: string
+    - averating: integer
 
 Seller:
     - name: string
     - phone: integer
     - password: string
-    - paypal_email: string
+    - averating: integer
 
 # Assume that users will only either be sellers or buyers, not both.
 
@@ -19,11 +20,9 @@ Task:
     - address: text
     - latitude: float
     - longitude: float
-    - start_date: date
-    - end_date: date
-    - start_time: time
-    - end_time: time
-    - task_completion: boolean
+    - start: text
+    - end: text
+    - task_completion: integer
 
 # As a buyer, I want to post a task and a price that I will pay someone for doing it.
 # e.g. Pick up my laundry on Thursday 5/15 between 9am and 5pm from Location A
@@ -39,8 +38,6 @@ Task:
 # Assume that buyers pay sellers in cash upon completion of task.
 
 Seller_Rating:
-    - buyer_id: integer
-    - seller_id: integer
     - task_id: integer
     - rating: integer
     - comment: text
@@ -49,8 +46,6 @@ Seller_Rating:
 # buyers can see if the seller did a good job fulfilling the task.
 
 Buyer_Rating:
-    - buyer_id: integer
-    - seller_id: integer
     - task_id: integer
     - rating: integer
     - comment: text

@@ -1,14 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Final</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+  <head>
+    <title>Helpr</title>
 
-<%= yield %>
+    <%= stylesheet_link_tag    "http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" %>
 
-</body>
+    <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag "application" %>
+
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="header">
+        <div class="row">
+          <div class="col-md-12">
+            <h1>Helpr</h1>
+          </div>
+        </div>
+
+<!-- IMPLEMENT LOGIN/NEW ACCOUNT SIGNUP - WORK IN PROGRESS -->
+
+        <div class="row">
+          <div class="col-md-8">
+            <%= link_to "Tasks", "/tasks", "class" => "item-link"  %> |
+            <%= link_to "Sellers", "/sellers" %>
+          </div>
+          <div class="pull-right">
+            Login Placeholder | Sign Up Placeholder
+          </div>
+        </div>
+        <hr>
+      </div>
+
+
+      <%= yield %>
+
+    <div>
+
+  </body>
 </html>

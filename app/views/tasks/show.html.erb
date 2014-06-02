@@ -1,0 +1,62 @@
+<% task_id = params["id"] %>
+<% task = Task.read(task_id) %>
+<% price = task["price_in_cents"]/100 %>
+<% buyer = Buyer.find_by("id" => task["buyer_id"]) %>
+<%# buyertasks = Task.find_by("buyer_id" => Buyer["id"]) %>
+<%# avg = Buyer_Rating.where("task_id" => buyertasks["id"]).average(:rating).to_i %>
+
+<div class="row">
+  <div class="col-md-8">
+
+    <h3>
+      <%= task["description"] %>
+    </h3>
+
+<br>
+
+    <h4>
+      <strong>Location:</strong> <%= task["address"] %><br><br>
+      <strong>Start Time:</strong> <%= task["start"] %><br><br>
+      <strong>End Time:</strong> <%= task["end"] %><br><br>
+      <strong>Compensation:</strong> $<%= number_with_precision(price, precision: 2) %><br><br>
+      <% if task["buyer_id"].nil? %>
+        <% else %>
+        <strong>Posted By:</strong> <%= link_to buyer["name"], "/buyers/#{buyer["id"]}" %> (placeholder for rating)
+        <!-- NEED TO ADD BUYER RATING -->
+      <% end %>
+    </h4>
+
+  </div>
+</div>
+
+<br><br>
+
+<p>
+  <em>Only seen by Buyer who posted the task [functioning]</em><br>
+  <%= link_to "Edit task", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
+  <%= link_to "Delete task", "/tasks/#{task["id"]}", "method" => "delete", "class" => 'btn btn-lg btn-primary' %>
+</p>
+
+<br><br>
+
+<p>
+  <em>Only seen by Sellers [work in progress]</em><br>
+  <% if task["seller_id"].nil? %>
+    <%= link_to "Sign up for this task", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
+  <% else %>
+    <h4>
+      <% seller = Seller.find_by("id" => task["seller_id"]) %>
+      <em><%= seller["name"] %> has already signed up for this task.</em>
+    </h4>
+  <% end %>
+</p>
+
+<br><br><br>
+
+<p>
+  <%= link_to "Back to Tasks", "/tasks/", "class" => 'btn btn-lg btn-primary' %>
+</p>
+
+
+
+
