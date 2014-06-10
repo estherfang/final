@@ -1,34 +1,42 @@
-<h1>Create New Task</h1>
+<h2>Create New Task</h2>
 
-<%= form_tag "/tasks", "method" => "post" %>
+<br>
 
-<!-- NEED TO ADD ID OF BUYER POSTING TASK -->
+<div class="row">
+  <div class="col-sm-6">
 
-  <p>
-    <%= label_tag "description", "Description of task" %>
-    <%= text_field_tag "description" %>
-  </p>
+    <p><%= @message %></p>
 
-  <p>
-    <%= label_tag "address", "Location of task" %>
-    <%= text_field_tag "address" %>
-  </p>
+    <%= form_tag "/tasks", "method" => "post" %>
 
-  <p>
-    <%= label_tag "start", "Start date & time (YYYY-MM-DD HH:MM)" %>
-    <%= text_field_tag "start" %>
-  </p>
+      <div class="form-group">
+        <%= label_tag "description", "What do you need done?" %>
+        <%= text_field_tag "description", "", "class" => "form-control" %>
+      </div>
 
-  <p>
-    <%= label_tag "end", "End date & time (YYYY-MM-DD HH:MM)" %>
-    <%= text_field_tag "end" %>
-  </p>
+      <div class="form-group">
+        <%= label_tag "address", "Where do you need it done?" %>
+        <%= text_field_tag "address", "", "class" => "form-control" %>
+      </div>
 
-  <p>
-    <%= label_tag "price_in_cents", "Price in cents (eg. type 1000 for $10)" %>
-    <%= text_field_tag "price_in_cents" %>
-  </p>
+      <div class="form-group">
+        <%= label_tag "", "When do you need it done? (YYYY-MM-DD HH:MM)" %><br>
+        Between <%= text_field_tag "start", "", "class" => "form-control" %>
+        and <%= text_field_tag "end", "", "class" => "form-control"  %>
 
-  <%= submit_tag %> or <%= link_to "Cancel", "/tasks" %>
+      </div>
 
-</form>
+      <div class="form-group">
+        <%= label_tag "price_in_cents", "How much will you pay? (price in cents, e.g. type 1000 for $10.00)" %>
+        <%= text_field_tag "price_in_cents", "", "class" => "form-control" %>
+      </div>
+
+      <br>
+
+      <%= submit_tag "Create task", "class" => "btn btn-lg btn-primary" %>&nbsp;&nbsp;
+      <%= link_to "Cancel", "/tasks", "class" => 'btn btn-lg btn-danger' %>
+
+
+    </form>
+</div>
+</div>

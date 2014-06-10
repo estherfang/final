@@ -14,30 +14,61 @@
 
     <div class="container">
       <div class="header">
+
         <div class="row">
+
           <div class="col-md-12">
-            <h1>Helpr</h1>
+            <h1><%= link_to image_tag("logo.png", "height" => 100), "/" %></h1><br>
           </div>
+
         </div>
 
-<!-- IMPLEMENT LOGIN/NEW ACCOUNT SIGNUP - WORK IN PROGRESS -->
+        <% user = User.find_by("id" => cookies["user_id"]) %>
+        <% if user.present? %>
 
-        <div class="row">
-          <div class="col-md-8">
-            <%= link_to "Tasks", "/tasks", "class" => "item-link"  %> |
-            <%= link_to "Sellers", "/sellers" %>
+          <div class="row">
+
+            <div class="col-md-8">
+              <%= link_to "Tasks", "/tasks", "class" => "item-link"  %> |
+              <%= link_to "Member Directory", "/users" %>
+            </div>
+
+            <div class="pull-right">
+              Hello, <%= user["name"] %>!
+              <%= link_to "My Profile", "/users/#{user["id"]}" %> |
+              <%= link_to "Sign Out", '/logout' %>
+            </div>
+
           </div>
-          <div class="pull-right">
-            Login Placeholder | Sign Up Placeholder
+
+        <% else %>
+          <div class="row">
+            <div class="pull-right">
+              <%= link_to "Sign Up", '/users/new' %> |
+              <%= link_to "Sign In", '/login' %>
+            </div>
           </div>
-        </div>
+        <% end %>
+
+
         <hr>
+          <% if notice.present? %>
+            <% if notice == "Wrong username or password" %>
+              <div class="alert alert-danger">
+                <%= notice %>
+              </div>
+            <% else %>
+              <div class="alert alert-success">
+                 <%= notice %>
+              </div>
+            <% end %>
+          <% else %>
+          <% end %>
       </div>
-
 
       <%= yield %>
 
-    <div>
+    </div>
 
   </body>
 </html>

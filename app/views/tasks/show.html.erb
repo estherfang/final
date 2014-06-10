@@ -1,62 +1,298 @@
-<% task_id = params["id"] %>
-<% task = Task.read(task_id) %>
-<% price = task["price_in_cents"]/100 %>
-<% buyer = Buyer.find_by("id" => task["buyer_id"]) %>
-<%# buyertasks = Task.find_by("buyer_id" => Buyer["id"]) %>
-<%# avg = Buyer_Rating.where("task_id" => buyertasks["id"]).average(:rating).to_i %>
+<% task = Task.find_by("id" => params["id"]) %>
+<% user = User.find_by("id" => cookies["user_id"]) %>
+<% buyer = User.find_by("id" => task["buyer_id"]) %>
+<% seller = User.find_by("id" => task["seller_id"]) %>
 
-<div class="row">
-  <div class="col-md-8">
-
-    <h3>
-      <%= task["description"] %>
-    </h3>
+<h2><%= task["description"] %></h2>
 
 <br>
 
-    <h4>
-      <strong>Location:</strong> <%= task["address"] %><br><br>
-      <strong>Start Time:</strong> <%= task["start"] %><br><br>
-      <strong>End Time:</strong> <%= task["end"] %><br><br>
-      <strong>Compensation:</strong> $<%= number_with_precision(price, precision: 2) %><br><br>
-      <% if task["buyer_id"].nil? %>
-        <% else %>
-        <strong>Posted By:</strong> <%= link_to buyer["name"], "/buyers/#{buyer["id"]}" %> (placeholder for rating)
-        <!-- NEED TO ADD BUYER RATING -->
+<div class="row">
+  <div class="col-md-5">
+
+    <% if seller.present? %>
+      <% if user["id"] == buyer["id"] %>
+
+<!-- Buyer sees this if a seller has signed up -->
+
+        <%= link_to "Edit task", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
+
+        <br>
+        <br>
+
+        <table class="table">
+          <tr>
+            <th width=10%>Location</th>
+            <td><%= task["address"] %></td>
+          </tr>
+          <tr>
+            <th>Begins</th>
+            <td><%= task["start"] %></td>
+          </tr>
+          <tr>
+            <th>End</th>
+            <td><%= task["end"] %></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td>$<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %></td>
+          </tr>
+          <tr>
+            <th>Buyer</th>
+            <td>Me</td>
+          </tr>
+          <tr>
+            <th>Seller</th>
+            <td><%= link_to seller["name"], "/users/#{seller["id"]}" %></td>
+          </tr>
+
+          <% if task["task_completion"] == 1 %>
+            <tr>
+              <th>Completed?</th>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <th>Reviewed?</th>
+              <td>
+                <% if task["ratingbybuyer"].present? %>
+                  Yes
+                <% else %>
+                  No | <%= link_to "Write review", "/tasks/#{task["id"]}/edit" %>
+                <% end %>
+              </td>
+            </tr>
+            </table>
+          <% else %>
+            <tr>
+              <th>Completed?</th>
+              <td>No</td>
+            </tr>
+            </table>
+            <%= link_to "Delete task", "/tasks/#{task["id"]}", "method" => "delete", "class" => 'btn btn-lg btn-danger' %>&nbsp;&nbsp;
+          <% end %>
+
+
+      <% elsif user["id"] == seller["id"] %>
+
+<!-- Seller sees this if he/she has signed up -->
+
+        <%= link_to "Edit task", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
+
+        <br>
+        <br>
+
+        <table class="table">
+          <tr>
+            <th width=10%>Location</th>
+            <td><%= task["address"] %></td>
+          </tr>
+          <tr>
+            <th>Begins</th>
+            <td><%= task["start"] %></td>
+          </tr>
+          <tr>
+            <th>End</th>
+            <td><%= task["end"] %></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td>$<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %></td>
+          </tr>
+          <tr>
+            <th>Buyer</th>
+            <td><%= link_to buyer["name"], "/users/#{buyer["id"]}" %></td>
+          </tr>
+          <tr>
+            <th>Seller</th>
+            <td>Me</td>
+          </tr>
+          <% if task["task_completion"] == 1 %>
+            <tr>
+              <th>Completed?</th>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <th>Reviewed?</th>
+              <td>
+                <% if task["ratingbyseller"].present? %>
+                  Yes
+                <% else %>
+                  No | <%= link_to "Write review", "/tasks/#{task["id"]}/edit" %>
+                <% end %>
+              </td>
+            </tr>
+          <% else %>
+            <tr>
+              <th>Completed?</th>
+              <td><%= link_to "Mark complete", "/tasks/#{task["id"]}/edit" %></td>
+            </tr>
+          <% end %>
+
+
+        </table>
+
+      <% else %>
+
+        <table class="table">
+          <tr>
+            <th width=10%>Location</th>
+            <td><%= task["address"] %></td>
+          </tr>
+          <tr>
+            <th>Begins</th>
+            <td><%= task["start"] %></td>
+          </tr>
+          <tr>
+            <th>End</th>
+            <td><%= task["end"] %></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td>$<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %></td>
+          </tr>
+          <tr>
+            <th>Buyer</th>
+            <td><%= link_to buyer["name"], "/users/#{buyer["id"]}" %></td>
+          </tr>
+          <tr>
+            <th>Seller</th>
+            <td><%= link_to seller["name"], "/users/#{seller["id"]}" %></td>
+          </tr>
+        </table>
+
       <% end %>
-    </h4>
+
+    <% else %>
+
+      <% if user["id"] == buyer["id"] %>
+
+<!-- Buyer sees this if no seller has signed up -->
+
+        <%= link_to "Edit task", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>&nbsp;&nbsp;
+        <%= link_to "Delete task", "/tasks/#{task["id"]}", "method" => "delete", "class" => 'btn btn-lg btn-danger' %>
+
+        <br>
+        <br>
+
+        <table class="table">
+          <tr>
+            <th width=10%>Location</th>
+            <td><%= task["address"] %></td>
+          </tr>
+          <tr>
+            <th>Begins</th>
+            <td><%= task["start"] %></td>
+          </tr>
+          <tr>
+            <th>End</th>
+            <td><%= task["end"] %></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td>$<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %></td>
+          </tr>
+         <tr>
+            <th>Buyer</th>
+            <td>Me</td>
+          </tr>
+          <tr>
+            <th>Seller</th>
+            <td>No seller yet.</td>
+          </tr>
+        </table>
+
+      <% else %>
+
+<!-- Everyone except buyer sees this if no seller has signed up -->
+
+        <%= link_to "Sign me up", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
+
+        <br>
+        <br>
+
+        <table class="table">
+          <tr>
+            <th width=10%>Location</th>
+            <td><%= task["address"] %></td>
+          </tr>
+          <tr>
+            <th>Begins</th>
+            <td><%= task["start"] %></td>
+          </tr>
+          <tr>
+            <th>End</th>
+            <td><%= task["end"] %></td>
+          </tr>
+          <tr>
+            <th>Price</th>
+            <td>$<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %></td>
+          </tr>
+          <tr>
+            <th>Buyer</th>
+            <td><%= link_to buyer["name"], "/users/#{buyer["id"]}" %></td>
+          </tr>
+          <tr>
+            <th>Seller</th>
+            <td>No seller yet | <%= link_to "Sign me up", "/tasks/#{task["id"]}/edit" %> </td>
+          </tr>
+        </table>
+
+      <% end %>
+
+    <% end %>
+
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <h3>Conversation</h3>
+    <br>
+
+      <% messages = Message.where("task_id" => task["id"]) %>
+      <% if messages.empty? %>
+        No messages yet.
+        <br><br>
+      <% else %>
+        <table class="table">
+          <tr>
+            <th width=30%>Date/Time</th>
+            <th width=20%>By</th>
+            <th>Message</th>
+          </tr>
+
+          <% Message.read.order("created_at asc").each do |message| %>
+
+            <% if message["task_id"] == task["id"] %>
+              <tr>
+              <td><%= message["created_at"] %></td>
+              <td><%= User.find_by("id" => message["user_id"])["name"] %></td>
+              <td><%= message["content"] %></td>
+              </tr>
+            <% end %>
+          <% end %>
+
+        </table>
+      <% end %>
+
+
+      <%= form_tag "/messages", "method" => "post" %>
+
+        <div class="form-group">
+          <%= label_tag "message", "Your message" %>
+          <%= text_field_tag "message", "", "class" => "form-control" %>
+        </div>
+
+        <%= hidden_field_tag "user_id", user["id"] %>
+        <%= hidden_field_tag "task_id", task["id"] %>
+
+        <br>
+
+        <%= submit_tag "Post new message", "class" => "btn btn-lg btn-primary" %>&nbsp;&nbsp;
+        <%= link_to "Cancel", "/", "class" => 'btn btn-lg btn-danger' %>
+
+      </form>
 
   </div>
 </div>
-
-<br><br>
-
-<p>
-  <em>Only seen by Buyer who posted the task [functioning]</em><br>
-  <%= link_to "Edit task", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
-  <%= link_to "Delete task", "/tasks/#{task["id"]}", "method" => "delete", "class" => 'btn btn-lg btn-primary' %>
-</p>
-
-<br><br>
-
-<p>
-  <em>Only seen by Sellers [work in progress]</em><br>
-  <% if task["seller_id"].nil? %>
-    <%= link_to "Sign up for this task", "/tasks/#{task["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
-  <% else %>
-    <h4>
-      <% seller = Seller.find_by("id" => task["seller_id"]) %>
-      <em><%= seller["name"] %> has already signed up for this task.</em>
-    </h4>
-  <% end %>
-</p>
-
-<br><br><br>
-
-<p>
-  <%= link_to "Back to Tasks", "/tasks/", "class" => 'btn btn-lg btn-primary' %>
-</p>
-
-
-
-

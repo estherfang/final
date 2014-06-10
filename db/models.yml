@@ -1,16 +1,9 @@
-Buyer:
+User:
+    - username: string
     - name: string
     - phone: integer
     - password: string
-    - averating: integer
 
-Seller:
-    - name: string
-    - phone: integer
-    - password: string
-    - averating: integer
-
-# Assume that users will only either be sellers or buyers, not both.
 
 Task:
     - buyer_id: integer
@@ -18,37 +11,16 @@ Task:
     - price_in_cents: integer
     - description: text
     - address: text
-    - latitude: float
-    - longitude: float
-    - start: text
-    - end: text
+    - start: datetime
+    - end: datetime
     - task_completion: integer
+    - ratingbybuyer: integer
+    - commentbybuyer: text
+    - ratingbyseller: integer
+    - commentbyseller: text
 
-# As a buyer, I want to post a task and a price that I will pay someone for doing it.
-# e.g. Pick up my laundry on Thursday 5/15 between 9am and 5pm from Location A
-# and drop it off at location B.
-
-# As a seller, I want to search available tasks by location and accept tasks that I
-# am willing to do for the given price.
-
-# If the task has not been accepted by a seller, then "seller_id" will be blank.
-# "address" will be converted into coordinates for displaying on a map and
-# searching by sellers.
-
-# Assume that buyers pay sellers in cash upon completion of task.
-
-Seller_Rating:
+Message:
     - task_id: integer
-    - rating: integer
-    - comment: text
-
-# As a buyer, I want to rate sellers after completion of the task so that other
-# buyers can see if the seller did a good job fulfilling the task.
-
-Buyer_Rating:
-    - task_id: integer
-    - rating: integer
-    - comment: text
-
-# As a seller, I want to rate buyers after completion of the task so that other
-# sellers can see if the buyer paid me on time.
+    - created_at: datetime
+    - user_id: integer
+    - content: text

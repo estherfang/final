@@ -1,51 +1,199 @@
-<% task_id = params["id"] %>
-<% task = Task.read(task_id) %>
+<% task = Task.read(params["id"]) %>
+<% user = User.find_by("id" => cookies["user_id"]) %>
+<% buyer = User.find_by("id" => task["buyer_id"]) %>
+<% seller = User.find_by("id" => task["seller_id"]) %>
 
-<h1><%= task["name"] %></h1>
+<h2>Task: <%= task["description"] %></h2
 
-<!-- NEED TO DISTINGUISH WHO IS VIEWING PAGE -->
+    <% if seller.present? %>
+      <% if user["id"] == buyer["id"] %>
 
-<em>Only seen by Sellers who haven't signed up for the task if the task is available [work in progress]</em><br>
-<h3><%= link_to "Placeholder to sign up for task", "/tasks/", "class" => 'btn btn-lg btn-primary' %></h3>
+<!-- Buyer sees this if a seller has signed up -->
 
-<br><br>
+        <div class="row">
+          <div class="col-md-5">
 
-<em>Only seen by Sellers who have signed up for the task [work in progress]</em><br>
-<h3><%= link_to "Placeholder to mark task complete", "/tasks/", "class" => 'btn btn-lg btn-primary' %></h3>
+            <%= form_tag "/tasks/#{task["id"]}", "method" => "patch" %>
 
-<br><br>
+              <% if task["task_completion"] == 0 %>
 
-<em>Only seen by Buyers who posted the task [functioning]</em>
+<!-- Buyer sees this if task has not been completed -->
 
-<%= form_tag "/tasks/#{task["id"]}", "method" => "patch" %>
+                <h3>Edit details</h3>
+                <br>
+                <%= link_to "Delete task", "/tasks/#{task["id"]}", "method" => "delete", "class" => 'btn btn-lg btn-danger' %>&nbsp;&nbsp;<br><br>
 
-  <p>
-    <%= label_tag "description", "Description of task" %>
-    <%= text_field_tag "description", task["description"] %>
-  </p>
+                <div class="form-group">
+                  <%= label_tag "description", "Description of task" %>
+                  <%= text_field_tag "description", task["description"], "class" => "form-control" %>
+                </div>
 
-  <p>
-    <%= label_tag "address", "Location of task" %>
-    <%= text_field_tag "address", task["address"] %>
-  </p>
+                <div class="form-group">
+                  <%= label_tag "address", "Location of task" %>
+                  <%= text_field_tag "address", task["address"], "class" => "form-control" %>
+                </div>
 
-  <p>
-    <%= label_tag "start", "Start date & time (YYYY-MM-DD HH:MM)" %>
-    <%= text_field_tag "start", task["start"] %>
-  </p>
+                <div class="form-group">
+                  <%= label_tag "start", "Start date & time (YYYY-MM-DD HH:MM)" %>
+                  <%= text_field_tag "start", task["start"], "class" => "form-control" %>
+                </div>
 
-  <p>
-    <%= label_tag "end", "End date & time (YYYY-MM-DD HH:MM)" %>
-    <%= text_field_tag "end", task["end"] %>
-  </p>
+                <div class="form-group">
+                  <%= label_tag "end", "End date & time (YYYY-MM-DD HH:MM)" %>
+                  <%= text_field_tag "end", task["end"], "class" => "form-control" %>
+                </div>
 
-  <p>
-    <%= label_tag "price_in_cents", "Price in cents (eg. type 1000 for $10)" %>
-    <%= text_field_tag "price_in_cents", task["price_in_cents"] %>
-  </p>
+                <div class="form-group">
+                  <%= label_tag "price_in_cents", "Price in cents (eg. type 1000 for $10)" %>
+                  <%= text_field_tag "price_in_cents", task["price_in_cents"], "class" => "form-control" %>
+                </div>
 
-  <%= submit_tag %> or <%= link_to "Cancel", "/tasks" %>
+              <% else %>
 
-</form>
+<!-- Buyer sees this if task has been completed -->
+
+              <div class="form-group">
+                <br>
+                <h3>Review Seller</h3>
+                <%= label_tag "rating", "Rating (scale of 1 to 5, 5 is best)" %>
+                <%= text_field_tag "ratingbybuyer", task["ratingbybuyer"], "class" => "form-control" %>
+                <%= label_tag "comment", "Comment" %>
+                <%= text_field_tag "commentbybuyer", task["commentbybuyer"], "class" => "form-control" %>
+                <br>
+              </div>
+              <% end %>
+
+              <br>
+
+              <%= submit_tag "Save Changes", "class" => "btn btn-lg btn-success" %>&nbsp;&nbsp;
+              <%= link_to "Cancel", "/tasks/#{params["id"]}", "class" => 'btn btn-lg btn-danger' %>
 
 
+            </form>
+          </div>
+        </div>
+
+      <% elsif user["id"] == seller["id"] %>
+
+<!-- Seller sees this -->
+
+<!-- Seller sees this if task has not been completed -->
+
+        <% if task["task_completion"] == 0 %>
+          <div class="row">
+            <div class="col-md-5">
+
+              <%= form_tag "/tasks/#{task["id"]}", "method" => "patch" %>
+
+                <h3>Mark as complete</h3>
+                <br>
+
+                <%= hidden_field_tag "task_completion", "1" %>
+
+                <%= submit_tag "Mark as complete", "class" => "btn btn-lg btn-success" %>&nbsp;&nbsp;
+                <%= link_to "Cancel", "/tasks/#{params["id"]}", "class" => 'btn btn-lg btn-danger' %>
+
+              </form>
+
+            </div>
+          </div>
+        <% else %>
+
+<!-- Seller sees this if task has been completed -->
+
+          <div class="row">
+            <div class="col-md-5">
+
+              <%= form_tag "/tasks/#{task["id"]}", "method" => "patch" %>
+
+                <h3>Review buyer</h3>
+                <br>
+
+              <div class="form-group">
+                <%= label_tag "rating", "Rating (scale of 1 to 5, 5 is best)" %>
+                <%= text_field_tag "ratingbyseller", task["ratingbyseller"], "class" => "form-control" %>
+                <%= label_tag "comment", "Comment" %>
+                <%= text_field_tag "commentbyseller", task["commentbyseller"], "class" => "form-control" %>
+                <br>
+              </div>
+
+                <%= submit_tag "Save Changes", "class" => "btn btn-lg btn-success" %>&nbsp;&nbsp;
+                <%= link_to "Cancel", "/tasks/#{params["id"]}", "class" => 'btn btn-lg btn-danger' %>
+
+            </form>
+
+            </div>
+          </div>
+
+
+              <% end %>
+
+      <% end %>
+
+    <% else %>
+      <% if user["id"] == buyer["id"] %>
+
+<!-- Buyer sees this if no seller has signed up -->
+
+        <div class="row">
+          <div class="col-md-5">
+            <%= form_tag "/tasks/#{task["id"]}", "method" => "patch" %>
+                <h3>Edit details</h3>
+                <br>
+                <div class="form-group">
+                  <%= label_tag "description", "Description of task" %>
+                  <%= text_field_tag "description", task["description"], "class" => "form-control" %>
+                </div>
+
+                <div class="form-group">
+                  <%= label_tag "address", "Location of task" %>
+                  <%= text_field_tag "address", task["address"], "class" => "form-control" %>
+                </div>
+
+                <div class="form-group">
+                  <%= label_tag "start", "Start date & time (YYYY-MM-DD HH:MM)" %>
+                  <%= text_field_tag "start", task["start"], "class" => "form-control" %>
+                </div>
+
+                <div class="form-group">
+                  <%= label_tag "end", "End date & time (YYYY-MM-DD HH:MM)" %>
+                  <%= text_field_tag "end", task["end"], "class" => "form-control" %>
+                </div>
+
+                <div class="form-group">
+                  <%= label_tag "price_in_cents", "Price in cents (eg. type 1000 for $10)" %>
+                  <%= text_field_tag "price_in_cents", task["price_in_cents"], "class" => "form-control" %>
+                </div>
+
+              <%= submit_tag "Save Changes", "class" => "btn btn-lg btn-success" %>&nbsp;&nbsp;
+              <%= link_to "Delete task", "/tasks/#{task["id"]}", "method" => "delete", "class" => 'btn btn-lg btn-danger' %>&nbsp;&nbsp;
+              <%= link_to "Cancel", "/tasks/#{params["id"]}", "class" => 'btn btn-lg btn-danger' %>
+
+            </form>
+          </div>
+        </div>
+
+
+      <% else %>
+
+<!-- Seller sees this if no seller has signed up -->
+
+        <br><br>
+
+        <div class="row">
+          <div class="col-md-5">
+            <%= form_tag "/tasks/#{task["id"]}", "method" => "patch" %>
+
+              <%= hidden_field_tag "user_id", user["id"] %>
+
+              <%= submit_tag "Sign up for task", "class" => "btn btn-lg btn-success" %>&nbsp;&nbsp;
+              <%= link_to "Cancel", "/tasks/#{params["id"]}", "class" => 'btn btn-lg btn-danger' %>
+
+            </form>
+          </div>
+        </div>
+
+      <% end %>
+    <% end %>
+  </div>
+</div>

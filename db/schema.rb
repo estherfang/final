@@ -11,45 +11,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140602210724) do
+ActiveRecord::Schema.define(version: 20140609041721) do
 
-  create_table "buyer_ratings", force: true do |t|
-    t.integer "task_id"
-    t.integer "rating"
-    t.text    "comment"
-  end
-
-  create_table "buyers", force: true do |t|
-    t.string  "name"
-    t.integer "phone"
-    t.string  "password"
-    t.integer "averating"
-  end
-
-  create_table "seller_ratings", force: true do |t|
-    t.integer "task_id"
-    t.integer "rating"
-    t.text    "comment"
-  end
-
-  create_table "sellers", force: true do |t|
-    t.string  "name"
-    t.integer "phone"
-    t.string  "password"
-    t.integer "averating"
+  create_table "messages", force: true do |t|
+    t.integer  "task_id"
+    t.datetime "created_at"
+    t.integer  "user_id"
+    t.text     "content"
   end
 
   create_table "tasks", force: true do |t|
-    t.integer "buyer_id"
-    t.integer "seller_id"
-    t.integer "price_in_cents"
-    t.text    "description"
-    t.text    "address"
-    t.float   "latitude"
-    t.float   "longitude"
-    t.text    "start"
-    t.text    "end"
-    t.integer "task_completion"
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.integer  "price_in_cents"
+    t.text     "description"
+    t.text     "address"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.datetime "start"
+    t.datetime "end"
+    t.integer  "task_completion"
+    t.integer  "ratingbybuyer"
+    t.text     "commentbybuyer"
+    t.integer  "ratingbyseller"
+    t.text     "commentbyseller"
+  end
+
+  create_table "users", force: true do |t|
+    t.string  "username"
+    t.string  "name"
+    t.integer "phone"
+    t.string  "password"
+    t.float   "avesellerrating"
+    t.float   "avebuyerrating"
   end
 
 end

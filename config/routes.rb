@@ -1,11 +1,11 @@
 Final::Application.routes.draw do
 
   # Specify a custom home page
-  get "/" => "tasks#index"
+  get "/" => "main#index"
+  get "/index" => "main#index"
 
 
-  # Sign-In and Sign-Out - WORK IN PROGRESS
-
+  # Sign-In and Sign-Out
   get "/logout" => 'sessions#logout'
   get "/login" => 'sessions#login'
   post "/authenticate" => 'sessions#authenticate'
@@ -29,41 +29,27 @@ Final::Application.routes.draw do
   delete "/tasks/:id" => 'tasks#destroy'
 
 
-  # Resource: Sellers - WORK IN PROGRESS
+  # Resource: Users
 
   # --- Create
-  get "/sellers/new" => 'sellers#new'
-  post "/sellers" => 'sellers#create'
+  get "/users/new" => 'users#new'
+  post "/users" => 'users#create'
 
   # --- Read
-  get "/sellers" => 'sellers#index'
-  get "/sellers/:id" => 'sellers#show'
+  get "/users" => 'users#index'
+  get "/users/:id" => 'users#show'
 
   # -- Update
-  get "/sellers/:id/edit" => 'sellers#edit'
-  patch "/sellers/:id" => 'sellers#update'
+  get "/users/:id/edit" => 'users#edit'
+  patch "/users/:id" => 'users#update'
 
   # --- Delete
-  delete "/sellers/:id" => 'sellers#destroy'
+  delete "/users/:id" => 'users#destroy'
 
-
-  # Resource: Buyers - WORK IN PROGRESS
+  # Resource: Messages
 
   # --- Create
-  get "/buyers/new" => 'buyers#new'
-  post "/buyers" => 'buyers#create'
-
-  # --- Read
-  get "/buyers" => 'buyers#index'
-  get "/buyers/:id" => 'buyers#show'
-
-  # -- Update
-  get "/buyers/:id/edit" => 'buyers#edit'
-  patch "/buyers/:id" => 'buyers#update'
-
-  # --- Delete
-  delete "/buyers/:id" => 'buyers#destroy'
-
+  post "/messages" => 'messages#create'
 
 end
 
