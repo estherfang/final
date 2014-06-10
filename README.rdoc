@@ -1,28 +1,19 @@
-== README
+Requirements:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Implement at least one many-to-many association - Yes?
 
-Things you may want to cover:
+Implement at least three models - Yes!
 
-* Ruby version
+Demonstrate best-practice use of Rails MVC architecture - Um, not sure?
 
-* System dependencies
+Allow users to sign up, sign in, and sign out - Yes!
 
-* Configuration
+Populate the database via seed data - Yes!
 
-* Database creation
+Mashup data from an external web service (maps, social networks, open government data). Note: Using the built-in weather functionality does not qualify unless it is materially enhances your project. - No :(
 
-* Database initialization
+Use at least three validation rules - No :(
 
-* How to run the test suite
+Proper use of a CSS framework like Bootstrap or Foundation (grid usage, form elements, or other components) - Yes? (Mostly tables and buttons)
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Deploy your app to a live internet URL - Yes! http://sleepy-spire-6099.herokuapp.com/
