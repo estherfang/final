@@ -46,9 +46,9 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem "quiet_assets", group: "development"
-gem "hirb", group: "development"
-gem "ez", group: "development"
+gem "quiet_assets"
+gem "hirb"
+gem "ez"
 group :development, :test do
   gem "sqlite3"
 end
