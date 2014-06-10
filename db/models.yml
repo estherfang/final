@@ -11,8 +11,8 @@ Task:
     - price_in_cents: integer
     - description: text
     - address: text
-    - start: datetime
-    - end: datetime
+    - start: string
+    - end: string
     - task_completion: integer
     - ratingbybuyer: integer
     - commentbybuyer: text
