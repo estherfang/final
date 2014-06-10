@@ -1,0 +1,257 @@
+<% myposts = Task.where("buyer_id" => params["id"]) %>
+<% mybuyerrating = myposts.average("ratingbyseller") %>
+
+<% myjobs = Task.where("seller_id" => params["id"]) %>
+<% mysellerrating = myjobs.average("ratingbybuyer") %>
+
+<h2><%= @user["name"] %>'s Profile</h2>
+
+<h4>
+  Buyer Rating:
+    <% if mybuyerrating.present? %>
+      <% mybuyerrating.round.times do %>
+        &star;
+      <% end %>
+      (<%= mybuyerrating %>)
+    <% else %>
+    Not rated yet.
+    <% end %>
+    <br>
+  Seller Rating:
+    <% if mysellerrating.present? %>
+      <% mysellerrating.round.times do %>
+        &star;
+      <% end %>
+      (<%= mysellerrating %>)
+    <% else %>
+    Not rated yet.
+    <% end %>
+</h4>
+
+<br>
+
+<% if cookies["user_id"] == params["id"] %>
+
+  <%= link_to "Edit my account", "/users/#{params["id"]}/edit", "class" => 'btn btn-lg btn-primary' %>
+
+  <br>
+  <br>
+
+  <h3>Tasks posted by me</h3>
+  <table class="table">
+    <tr>
+      <th width=20%>Description</th>
+      <th width=25%>Location</th>
+      <th width=12%>Begins</th>
+      <th width=12%>Ends</th>
+      <th width=8%>Price</th>
+      <th width=12%>Seller</th>
+      <th width=8%>Completed?</th>
+      <th>Reviewed?</th>
+    </tr>
+
+    <% myposts.read.order("start asc").each do |task| %>
+
+      <% if task["task_completion"] == 1 %>
+        <tr class="success">
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td><%= task["address"] %></td>
+          <td><%= task["start"] %></td>
+          <td><%= task["end"] %></td>
+          <td>
+            $<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %>
+          </td>
+          <td>
+            <% other = User.find_by("id" => task["seller_id"]) %>
+            <%= link_to other["name"], "/users/#{other["id"]}" %>
+          </td>
+          <td>Yes</td>
+          <td>
+            <% if task["ratingbybuyer"].present? %>
+              Yes
+            <% else %>
+              <%= link_to "Write review", "/tasks/#{task["id"]}/edit" %>
+            <% end %>
+          </td>
+        </tr>
+      <% else %>
+        <tr class="danger">
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td><%= task["address"] %></td>
+          <td><%= task["start"] %></td>
+          <td><%= task["end"] %></td>
+          <td>
+            $<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %>
+          </td>
+          <td>
+            <% if task["seller_id"].nil? %>
+              No seller yet
+              <% else %>
+                <% other = User.find_by("id" => task["seller_id"]) %>
+                <%= link_to other["name"], "/users/#{other["id"]}" %>
+            <% end %>
+          </td>
+          <td>No</td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+
+  <br>
+
+  <h3>Tasks I signed up for</h3>
+  <table class="table">
+    <tr>
+      <th width=20%>Description</th>
+      <th width=25%>Location</th>
+      <th width=12%>Begins</th>
+      <th width=12%>Ends</th>
+      <th width=8%>Price</th>
+      <th width=12%>Buyer</th>
+      <th width=8%>Completed?</th>
+      <th>Reviewed?</th>
+    </tr>
+
+    <% myjobs.read.order("start asc").each do |task| %>
+
+      <% if task["task_completion"] == 1 %>
+        <tr class="success">
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td><%= task["address"] %></td>
+          <td><%= task["start"] %></td>
+          <td><%= task["end"] %></td>
+          <td>
+            $<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %>
+          </td>
+          <td>
+            <% other = User.find_by("id" => task["buyer_id"]) %>
+            <%= link_to other["name"], "/users/#{other["id"]}" %>
+          </td>
+          <td>Yes</td>
+          <td>
+            <% if task["ratingbybuyer"].present? %>
+              Yes
+            <% else %>
+              <%= link_to "Write review", "/tasks/#{task["id"]}/edit" %>
+            <% end %>
+          </td>
+        </tr>
+      <% else %>
+        <tr class="danger">
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td><%= task["address"] %></td>
+          <td><%= task["start"] %></td>
+          <td><%= task["end"] %></td>
+          <td>
+            $<%= number_with_precision(task["price_in_cents"]/100.00, precision: 2) %>
+          </td>
+          <td>
+            <% if task["seller_id"].nil? %>
+              No seller yet
+              <% else %>
+                <% other = User.find_by("id" => task["buyer_id"]) %>
+                <%= link_to other["name"], "/users/#{other["id"]}" %>
+            <% end %>
+          </td>
+          <td><%= link_to "Mark complete", "/tasks/#{task["id"]}/edit" %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+
+  <br>
+
+  <h3>Reviews Given</h3>
+  <table class="table">
+    <tr>
+      <th width=15%>Reviewed</th>
+      <th width=25%>Task</th>
+      <th width=10%>Role</th>
+      <th width=10%>Rating</th>
+      <th>Comment</th>
+    </tr>
+
+    <% myposts.read.order("start asc").each do |task| %>
+      <% if task["task_completion"] == 1 && task["ratingbybuyer"].present? %>
+        <tr>
+          <td>
+            <% other = User.find_by("id" => task["seller_id"]) %>
+            <%= link_to other["name"], "/users/#{other["id"]}" %>
+          </td>
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td>Seller</td>
+          <td><%= task["ratingbybuyer"] %></td>
+          <td><%= task["commentbybuyer"] %></td>
+        </tr>
+      <% else %>
+      <% end %>
+    <% end %>
+
+    <% myjobs.read.order("start asc").each do |task| %>
+      <% if (task["task_completion"] == 1 && task["ratingbyseller"].present?) %>
+        <tr>
+          <td>
+            <% other = User.find_by("id" => task["buyer_id"]) %>
+            <%= link_to other["name"], "/users/#{other["id"]}" %>
+          </td>
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td>Buyer</td>
+          <td><%= task["ratingbyseller"] %></td>
+          <td><%= task["commentbyseller"] %></td>
+        </tr>
+      <% else %>
+      <% end %>
+    <% end %>
+  </table>
+
+
+
+  <% else %>
+
+<% end %>
+
+  <br>
+
+<h3>Reviews Received</h3>
+
+  <table class="table">
+    <tr>
+      <th width=15%>Reviewer</th>
+      <th width=25%>Task</th>
+      <th width=10%>Role</th>
+      <th width=10%>Rating</th>
+      <th>Comment</th>
+    </tr>
+
+    <% myposts.read.order("start asc").each do |task| %>
+      <% if (task["task_completion"] == 1 && task["ratingbyseller"].present?) %>
+        <tr>
+          <td>
+            <% other = User.find_by("id" => task["seller_id"]) %>
+            <%= link_to other["name"], "/users/#{other["id"]}" %>
+          </td>
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td>Buyer</td>
+          <td><%= task["ratingbyseller"] %></td>
+          <td><%= task["commentbyseller"] %></td>
+        </tr>
+      <% else %>
+      <% end %>
+    <% end %>
+
+    <% myjobs.read.order("start asc").each do |task| %>
+      <% if task["task_completion"] == 1 && task["ratingbybuyer"].present? %>
+        <tr>
+          <td>
+            <% other = User.find_by("id" => task["buyer_id"]) %>
+            <%= link_to other["name"], "/users/#{other["id"]}" %>
+          </td>
+          <td><%= link_to task["description"], "/tasks/#{task["id"]}" %></td>
+          <td>Seller</td>
+          <td><%= task["ratingbybuyer"] %></td>
+          <td><%= task["commentbybuyer"] %></td>
+        </tr>
+      <% else %>
+      <% end %>
+    <% end %>
+  </table>

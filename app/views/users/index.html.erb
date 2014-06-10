@@ -1,0 +1,37 @@
+<h2>Member Directory</h2>
+  <table class="table">
+
+    <tr>
+      <th>Name</th>
+      <th>Rating as a Buyer</th>
+      <th>Rating as a Seller</th>
+    </tr>
+
+    <% User.read.order("name asc").each do |user| %>
+
+      <% myposts = Task.where("buyer_id" => user["id"]) %>
+      <% mybuyerrating = myposts.average("ratingbyseller") %>
+
+      <% myjobs = Task.where("seller_id" => user["id"]) %>
+      <% mysellerrating = myjobs.average("ratingbybuyer") %>
+
+      <tr>
+        <td><%= link_to user["name"], "/users/#{user["id"]}" %></td>
+        <td>
+          <% if mybuyerrating.nil? %>
+            Not rated yet.
+          <% else %>
+            <%= mybuyerrating %> (<%= myposts.count %> tasks)
+          <% end %>
+        </td>
+        <td>
+          <% if mysellerrating.nil? %>
+            Not rated yet.
+          <% else %>
+            <%= mysellerrating %> (<%= myjobs.count %> tasks)
+          <% end %>
+        </td>
+      </tr>
+
+    <% end %>
+  </table>
