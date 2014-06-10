@@ -1,7 +1,7 @@
 User:
     - username: string
     - name: string
-    - phone: integer
+    - phone: string
     - password: string
 
 
