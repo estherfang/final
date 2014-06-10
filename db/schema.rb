@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140609041721) do
+ActiveRecord::Schema.define(version: 20140610014745) do
 
   create_table "messages", force: true do |t|
     t.integer  "task_id"
@@ -26,8 +26,6 @@ ActiveRecord::Schema.define(version: 20140609041721) do
     t.integer  "price_in_cents"
     t.text     "description"
     t.text     "address"
-    t.float    "latitude"
-    t.float    "longitude"
     t.datetime "start"
     t.datetime "end"
     t.integer  "task_completion"
@@ -42,8 +40,6 @@ ActiveRecord::Schema.define(version: 20140609041721) do
     t.string  "name"
     t.integer "phone"
     t.string  "password"
-    t.float   "avesellerrating"
-    t.float   "avebuyerrating"
   end
 
 end
